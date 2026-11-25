@@ -1,0 +1,7 @@
+# Top-level differential regression
+
+From the repository root, run `python3 verilog/tests/differential.py` (Python 3, GHDL with VHDL-2008, Icarus Verilog and `vvp`). Use `--ghdl`, `--iverilog`, and `--vvp` or environment variables `GHDL`, `IVERILOG`, `VVP` for nonstandard tool paths. Supply `--work-dir /tmp/gpu-diff` to retain the stimulus and traces. Otherwise all generated files live in a temporary directory.
+
+The Python driver writes one repeat-counted stimulus stream (`repeat reset write read word-address hex-write-data`) and feeds it to two testbenches. Each compares externally observable behavior: waitrequest immediately before the rising edge, and IRQ, HS, VS, video enable, RGB, and accepted read data after the clocked logic settles. Read data is ignored when not requested or stalled. Startup unknowns on uninitialized RAM are compared, not wildcarded; VHDL U/X is normalized to Verilog x. Traces record changes plus a final cycle count, so missing cycles/truncated runs do not silently pass.
+
+In addition to pin equality, the driver checks register and framebuffer reads, a VRAM request stalled across a clear, completion and VSYNC interrupts and W1C acknowledgments. An independent expected raster validates every sample of one 800×525 frame, including blanking, sync widths, channel ordering, and every pixel of a nonblack clear, rectangle, overlapping line, and CPU-written pixel. Reset before that frame restarts the VGA counters without erasing VRAM. A first mismatch identifies the cycle (or frame coordinates) and returns a nonzero exit status.

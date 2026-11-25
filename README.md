@@ -12,6 +12,10 @@ This Simple GPU is a memory-mapped 2D acceleration core. It handles VGA signal g
   </a>
 </p>
 
+## Verilog-2001 port
+
+See the [Verilog port](verilog/README.md) for all five synthesizable modules, a separate Quartus project, and simulation checks. The original VHDL project remains available as a reference.
+
 ## Software & Ecosystem
 
 The GlandaGPU project also includes software components used for development and testing:
